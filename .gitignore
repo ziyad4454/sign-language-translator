@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Each run's logs: decisions and test results from this computer
+logs/
+
+# Dictionary clips: 110 MB, and import_dictionary.py builds them from the dictionary's videos
+data/dictionary/
+
+# Older versions of the trained model
+model/backup-*/
+
+# Editor and local settings
+.idea/
+.claude/
+*.iml

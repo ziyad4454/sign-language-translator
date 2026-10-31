@@ -1,0 +1,16 @@
+# Python 3.12
+# mediapipe is pinned exactly: 1.0 removed the older mp.solutions API, and a future
+# release could change the API again.
+mediapipe==1.0.1
+# Installed by mediapipe anyway; listed because the scripts import cv2 directly.
+# Don't also install opencv-python: two OpenCV packages overwrite each other's cv2.
+opencv-contrib-python>=5.0
+numpy>=2.0
+# Training (train_model.py): a random forest for static gestures, an LSTM for dynamic ones.
+# TensorFlow is pinned to the version checked to install alongside mediapipe 1.0.1.
+scikit-learn>=1.5
+tensorflow==2.21.0
+# The chat app (app.py): a small local web server with WebSockets.
+fastapi>=0.115
+uvicorn>=0.30
+websockets>=13
