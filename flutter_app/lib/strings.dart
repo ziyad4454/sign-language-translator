@@ -85,7 +85,19 @@ class AppText {
   // The help page.
   String get help => _pick('المساعدة', 'Help');
   String get howToUse => _pick('طريقة الاستخدام', 'How to use');
+  String get signs => _pick('الإشارات', 'Signs');
   String get faq => _pick('الأسئلة الشائعة', 'FAQ');
+  String get signsSource => _pick(
+    'الشرح والفيديوهات من قاموس لغة الإشارة السعودية، الجمعية السعودية للإعاقة السمعية.',
+    'The steps and videos come from the Saudi Sign Language dictionary, by the Saudi Association for Hearing Impairment.',
+  );
+  String get oneHand => _pick('باليد اليمنى', 'Right hand');
+  String get bothHands => _pick('باليدين', 'Both hands');
+  String get watchVideo => _pick('مشاهدة الفيديو', 'Watch the video');
+  String get videoFailed => _pick(
+    'تعذّر فتح الفيديو. يجب التأكد من الاتصال بالإنترنت.',
+    "Couldn't open the video. Check the internet connection.",
+  );
 
   /// Every word the model knows, in the shown language.
   List<String> get knownWords => [
@@ -105,8 +117,8 @@ class AppText {
     (
       _pick('أداء الإشارة', 'Make the sign'),
       _pick(
-        'تُؤدى الإشارة مرة واحدة بسرعة طبيعية كما في القاموس، وتظهر الكلمة بعد لحظات.',
-        'Make the sign once at a natural speed, as in the dictionary. The word appears a moment later.',
+        'تُؤدى الإشارة مرة واحدة بسرعة طبيعية، وتظهر الكلمة بعد لحظات. وشرح كل إشارة في تبويب «الإشارات».',
+        'Make the sign once at a natural speed. The word appears a moment later. The Signs tab shows how to make each one.',
       ),
     ),
     (
@@ -154,8 +166,8 @@ class AppText {
       (
         _pick('لماذا لا تظهر الكلمة؟', "Why doesn't the word appear?"),
         _pick(
-          'يجب أن تكون الإشارة مثل إشارة القاموس، وأن يظهر الرأس والكتفان في الصورة مع إضاءة جيدة. والدقة تختلف من كلمة إلى أخرى. ولمعرفة ما يراه المترجم، يمكن إظهار نسب التوقع من قائمة المزيد (⋮).',
-          'The sign needs to match the dictionary, with your head and shoulders in the picture and good light. Accuracy differs from word to word. To see what the translator is seeing, show the guesses from the More menu (⋮).',
+          'يجب أن تكون الإشارة مثل شرحها في تبويب «الإشارات»، وأن يظهر الرأس والكتفان في الصورة مع إضاءة جيدة. والدقة تختلف من كلمة إلى أخرى. ولمعرفة ما يراه المترجم، يمكن إظهار نسب التوقع من قائمة المزيد (⋮).',
+          'The sign needs to match the Signs tab, with your head and shoulders in the picture and good light. Accuracy differs from word to word. To see what the translator is seeing, show the guesses from the More menu (⋮).',
         ),
       ),
       (

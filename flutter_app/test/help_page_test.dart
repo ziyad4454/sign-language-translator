@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sign_translator/help_page.dart';
+import 'package:sign_translator/sign_guide.dart';
 import 'package:sign_translator/strings.dart';
 import 'package:sign_translator/theme.dart';
 
@@ -34,6 +38,33 @@ void main() {
   test('the words question works before the app has connected', () {
     const text = AppText(Language.en, {});
     expect(text.questions.first.$2, contains('once the translator'));
+  });
+
+  test('every word in labels_translation.json has a guide with its names', () {
+    final file = File('../labels_translation.json').readAsStringSync();
+    final words = (jsonDecode(file) as Map<String, dynamic>)..remove('nothing');
+    expect(signGuides.keys, words.keys);
+    words.forEach((label, names) {
+      expect(signGuides[label]!.arabicName, names['ar']);
+      expect(signGuides[label]!.englishName, names['en']);
+    });
+  });
+
+  test('every guide links to its own video', () {
+    final videos = signGuides.values.map((guide) => guide.video).toSet();
+    expect(videos.length, signGuides.length);
+  });
+
+  testWidgets('a sign opens its steps and video button', (tester) async {
+    const text = AppText(Language.ar, {});
+    await tester.pumpWidget(_app(text));
+    await tester.tap(find.text(text.signs));
+    await tester.pumpAndSettle();
+    final guide = signGuides['hello']!;
+    await tester.tap(find.text(guide.arabicName));
+    await tester.pumpAndSettle();
+    expect(find.text(guide.arabic), findsOneWidget);
+    expect(find.text(text.watchVideo), findsOneWidget);
   });
 
   for (final language in Language.values) {

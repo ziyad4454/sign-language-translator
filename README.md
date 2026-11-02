@@ -178,7 +178,7 @@ Then start the translator:
   - **speaker icon:** mutes the spoken words. Every new word is said out loud in the language on screen, using the device's voices. This computer has no Arabic voice, so it says them in English;
   - **sun / moon icon:** switches between light and dark mode. It follows the device until you pick one;
   - **عربي | English:** switches the language; Arabic reads right to left;
-  - **Help:** opens how to use the app and the frequently asked questions, in the language on screen;
+  - **Help:** opens how to use the app, the steps and dictionary video for each sign, and the frequently asked questions, in the language on screen;
   - **⋮ menu:** the accuracy test, the panel with the three most likely gestures and their confidence, and clearing the history.
 - **Sentence buttons:** say the sentence out loud, take back the last word (for when a wrong one appears), and start a new sentence.
 - **Accuracy test (اختبار الدقة):** asks for each of the 28 signs in turn, in two rounds, so 56 signs in all. It can take up to 12 minutes.
