@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'accuracy_test.dart';
 import 'camera_view.dart';
 import 'connection.dart';
+import 'help_page.dart';
 import 'sentence_card.dart';
 import 'speaker.dart';
 import 'strings.dart';
@@ -156,6 +157,11 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => test.dispose());
   }
 
+  void _openHelp() {
+    Navigator.of(context)
+        .push(MaterialPageRoute<void>(builder: (_) => HelpPage(text: _text)));
+  }
+
   void _onMenu(_MenuItem item) {
     switch (item) {
       case _MenuItem.test:
@@ -262,6 +268,13 @@ class _HomePageState extends State<HomePage> {
                   visualDensity: VisualDensity.compact,
                 ),
                 onSelectionChanged: (choice) => widget.onLanguage(choice.first),
+              ),
+              const SizedBox(width: 4),
+              TextButton.icon(
+                onPressed: _openHelp,
+                style: TextButton.styleFrom(foregroundColor: colors.ink),
+                icon: const Icon(Icons.help_outline),
+                label: Text(text.help),
               ),
               PopupMenuButton<_MenuItem>(
                 tooltip: text.more,

@@ -61,11 +61,12 @@ After changing it, run `flutter test tool/app_icon_test.dart`, then rebuild.
 | `lib/home_page.dart` | The page: top bar, sentence and history |
 | `lib/camera_view.dart` | The camera picture with its badges, and the guesses panel |
 | `lib/sentence_card.dart` | The sentence under the camera, with its buttons |
+| `lib/help_page.dart` | How to use the app, and the frequently asked questions |
 | `lib/speaker.dart` | Says the words out loud |
 | `lib/test_card.dart` | The accuracy test on screen |
 | `lib/accuracy_test.dart` | The accuracy test's rules: two rounds, 10 seconds per sign, scoring |
 | `lib/connection.dart` | The WebSockets to `app.py`, the camera switch, and saving test results |
 | `lib/strings.dart` | Everything the app says, in Arabic and English |
 | `lib/theme.dart` | Light and dark colours, and shared pieces of the page |
-| `test/` | Tests for the accuracy test's rules: `flutter test` |
+| `test/` | Tests for the accuracy test's rules and the help page: `flutter test` |
 | `tool/app_icon_test.dart` | Draws the app icon |
