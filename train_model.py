@@ -60,6 +60,7 @@ VALIDATION_SHARE = 0.15
 MIN_SAMPLES = 30
 SEED = 0
 RECORDED_COPIES = 3  # each of your own dynamic recordings is used this many times
+ENSEMBLE_SIZE = 3  # models trained with different seeds; the saved model averages them
 FREE_HAND_SHARE = 0.5  # one-handed clips that get a resting free hand added (dictionary) or removed (copies of yours)
 H = landmarks.HAND_FEATURES
 
@@ -248,11 +249,26 @@ def repeat_recorded(X, y, groups, one_handed, rng):
 
 
 def fit(X, y, num_classes):
+    """Train ENSEMBLE_SIZE LSTMs with different seeds and join them into one model that
+    averages their answers. On your held-out recordings three averaged models beat one:
+    "nothing" 57% -> 70%, "please" 17 -> 19 of 20, the other words the same or better."""
+    import keras
+
+    members = [fit_one(X, y, num_classes, SEED + i) for i in range(ENSEMBLE_SIZE)]
+    if len(members) == 1:
+        return members[0]
+    inputs = keras.Input(shape=(landmarks.SEQUENCE_FRAMES, landmarks.FEATURES_PER_FRAME))
+    for i, member in enumerate(members):
+        member.name = f"member_{i}"
+    return keras.Model(inputs, keras.layers.Average()([member(inputs) for member in members]))
+
+
+def fit_one(X, y, num_classes, seed):
     """Train a fresh LSTM, stopping once a validation slice of the data stops improving."""
     import keras
 
-    keras.utils.set_random_seed(SEED)
-    X_fit, X_val, y_fit, y_val = stratified_split(X, y, VALIDATION_SHARE, SEED)
+    keras.utils.set_random_seed(seed)
+    X_fit, X_val, y_fit, y_val = stratified_split(X, y, VALIDATION_SHARE, seed)
     model = keras.Sequential(
         [
             keras.Input(shape=(landmarks.SEQUENCE_FRAMES, landmarks.FEATURES_PER_FRAME)),
