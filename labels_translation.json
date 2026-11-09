@@ -27,5 +27,14 @@
   "home": {"en": "Home", "ar": "بيت"},
   "phone": {"en": "Phone", "ar": "هاتف"},
   "car": {"en": "Car", "ar": "سيارة"},
+  "me": {"en": "I / Me", "ar": "أنا"},
+  "father": {"en": "Father", "ar": "أب"},
+  "mother": {"en": "Mother", "ar": "أم"},
+  "brother": {"en": "Brother", "ar": "أخ"},
+  "and": {"en": "And", "ar": "و"},
+  "in": {"en": "In", "ar": "في"},
+  "from": {"en": "From", "ar": "من"},
+  "on": {"en": "On", "ar": "على"},
+  "about": {"en": "About", "ar": "عن"},
   "nothing": null
 }

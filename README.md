@@ -2,7 +2,7 @@
 
 مترجم يقرأ إشارات لغة الإشارة السعودية من كاميرا الحاسب، ويعرضها نصاً بالعربية أو الإنجليزية داخل تطبيق Flutter.
 
-Reads Saudi Sign Language signs (one or two hands) from a webcam and shows them as Arabic or English text in a chat-style app built with Flutter. It recognises 28 words from the official dictionary of the Saudi Association for Hearing Impairment (<https://sshi.sa>).
+Reads Saudi Sign Language signs (one or two hands) from a webcam and shows them as Arabic or English text in a chat-style app built with Flutter. It recognises 37 words from the official dictionary of the Saudi Association for Hearing Impairment (<https://sshi.sa>).
 
 ```mermaid
 flowchart LR
@@ -77,7 +77,7 @@ Optional when you use the dictionary data. Your own samples help the model recog
 & $py collect_data.py --list            # what's recorded so far, including the dictionary clips
 ```
 
-All 28 signs in this project involve movement, so record every one of them with `--dynamic`. Static mode (without `--dynamic`) saves single frames and suits signs held completely still, such as alphabet letters. The script won't let one gesture's file hold both kinds.
+All 37 signs in this project involve movement, so record every one of them with `--dynamic`. Static mode (without `--dynamic`) saves single frames and suits signs held completely still, such as alphabet letters. The script won't let one gesture's file hold both kinds.
 
 Sit so your head, shoulders and stomach are in view. Every sample is measured relative to your shoulders, and the "help" sign is made in front of the stomach.
 
@@ -117,7 +117,7 @@ The dictionary clips aren't in this repository, so build them first. It download
 & $py train_model.py
 ```
 
-- **What it trains:** a random forest for static gestures and a small LSTM network for dynamic gestures, using every CSV under `data/`. All 28 signs in this project are dynamic.
+- **What it trains:** a random forest for static gestures and a small LSTM network for dynamic gestures, using every CSV under `data/`. All 37 signs in this project are dynamic.
 - **What it prints:**
   - how many samples each gesture has, with a warning if any gesture has fewer than 30 or the counts are uneven;
   - accuracy and a confusion matrix on a random 20% test split;
@@ -181,7 +181,7 @@ Then start the translator:
   - **Help:** opens how to use the app, the steps and dictionary video for each sign, and the frequently asked questions, in the language on screen;
   - **⋮ menu:** the accuracy test, the panel with the three most likely gestures and their confidence, and clearing the history.
 - **Sentence buttons:** say the sentence out loud, take back the last word (for when a wrong one appears), and start a new sentence.
-- **Accuracy test (اختبار الدقة):** asks for each of the 28 signs in turn, in two rounds, so 56 signs in all. It can take up to 12 minutes.
+- **Accuracy test (اختبار الدقة):** asks for each of the 37 signs in turn, in two rounds, so 74 signs in all. It can take up to 16 minutes.
   - Each sign has 10 seconds. The first word shown counts, and the app says whether it was right.
   - After each answer there's a short pause: lower your hands before the next sign.
   - At the end, the app shows the score and both attempts for each sign. It saves the result, with the time each sign was asked for, to `logs/test-<date>-<time>.json`.
