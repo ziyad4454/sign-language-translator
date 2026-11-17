@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>مترجم الإشارة</title>
+  <meta name="description" content="Saudi Sign Language translator that runs on the phone">
+  <meta name="theme-color" content="#0E1116">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="مترجم الإشارة">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" href="icons/Icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="bar">
+    <h1 id="title">مترجم لغة الإشارة</h1>
+    <div class="tools">
+      <button id="sound" class="icon" aria-label="Sound"></button>
+      <button id="flip" class="icon" aria-label="Switch camera"></button>
+      <button id="help" class="icon" aria-label="Help"></button>
+      <button id="lang" class="pill">EN</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="camera">
+      <video id="video" playsinline muted></video>
+      <canvas id="view"></canvas>
+      <span id="status" class="badge top"></span>
+      <span id="hint" class="badge hint" hidden></span>
+      <span id="guess" class="badge bottom" hidden></span>
+      <div id="start" class="start">
+        <img src="icons/Icon-192.png" alt="" width="72" height="72">
+        <p id="startText"></p>
+        <button id="startButton" class="primary"></button>
+        <p id="loading" class="muted"></p>
+      </div>
+    </section>
+
+    <section class="sentence">
+      <p id="sentence" class="placeholder"></p>
+      <div class="actions">
+        <button id="speak" class="icon" aria-label="Speak"></button>
+        <button id="undo" class="icon" aria-label="Undo"></button>
+        <button id="clear" class="icon" aria-label="New sentence"></button>
+      </div>
+    </section>
+
+    <section class="history">
+      <h2 id="historyTitle"></h2>
+      <ol id="history"></ol>
+      <p id="historyEmpty" class="muted"></p>
+    </section>
+  </main>
+
+  <dialog id="helpDialog">
+    <div class="sheet">
+      <header>
+        <h2 id="helpTitle"></h2>
+        <button id="helpClose" class="icon" aria-label="Close"></button>
+      </header>
+      <ol id="steps"></ol>
+      <h3 id="signsTitle"></h3>
+      <p id="signsNote" class="muted"></p>
+      <div id="signs"></div>
+    </div>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
