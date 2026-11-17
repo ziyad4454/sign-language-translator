@@ -69,7 +69,7 @@ const $ = (id) => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 const testVideo = params.get('video');
 const state = {
-  lang: localStorageGet('lang') || 'ar',
+  lang: params.get('lang') || localStorageGet('lang') || 'ar',
   sound: localStorageGet('sound') !== 'off',
   facing: 'user',
   words: [],
@@ -270,17 +270,21 @@ function loop() {
 async function runTestVideo() {
   const video = $('video');
   const fps = Number(params.get('fps')) || 25;
-  const frameCount = Number(params.get('frames'));
-  if (frameCount) {
-    // testVideo is a folder of numbered JPEG frames (0000.jpg, 0001.jpg, ...).
-    let image;
-    for (let i = 0; i < frameCount; i++) {
-      image = new Image();
-      image.src = `${testVideo}/${String(i).padStart(4, '0')}.jpg`;
-      await image.decode();
-      step(image, i / fps);
+  if (params.get('frames')) {
+    // testVideo is a folder of numbered JPEG frames (0000.jpg, 0001.jpg, ...), or several
+    // folders separated by commas with their frame counts in the same order, played one
+    // after another.
+    const folders = testVideo.split(','), counts = params.get('frames').split(',').map(Number);
+    let image, t = 0;
+    for (let f = 0; f < folders.length; f++) {
+      for (let i = 0; i < counts[f]; i++) {
+        image = new Image();
+        image.src = `${folders[f]}/${String(i).padStart(4, '0')}.jpg`;
+        await image.decode();
+        step(image, t++ / fps);
+      }
+      for (let i = 0; i < VIDEO_TAIL_SECONDS * fps; i++) step(image, t++ / fps);
     }
-    for (let i = 0; i < VIDEO_TAIL_SECONDS * fps; i++) step(image, (frameCount + i) / fps);
     window.testDone = true;
     return;
   }
