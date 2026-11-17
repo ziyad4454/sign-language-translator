@@ -1,30 +1,44 @@
 # Sign Language Translator
 
-مترجم يقرأ إشارات لغة الإشارة السعودية من كاميرا الحاسب، ويعرضها نصاً بالعربية أو الإنجليزية داخل تطبيق Flutter.
+مترجم يقرأ إشارات لغة الإشارة السعودية من الكاميرا، ويعرضها نصاً بالعربية أو الإنجليزية وينطقها. يعمل على الآيفون والأندرويد مباشرة، وعلى الحاسب.
 
-Reads Saudi Sign Language signs (one or two hands) from a webcam and shows them as Arabic or English text in a chat-style app built with Flutter. It recognises 50 words from the official dictionary of the Saudi Association for Hearing Impairment (<https://sshi.sa>).
+Reads Saudi Sign Language signs (one or two hands) from a camera, shows them as Arabic or English text, and speaks them. It recognises 50 words from the official dictionary of the Saudi Association for Hearing Impairment (<https://sshi.sa>).
+
+**Try it on a phone:** <https://ziyad4454.github.io/sign-language-translator/>. Open it in Safari or Chrome and tap Start; the whole translator runs on the phone, and nothing is sent anywhere. To install it, use Safari’s Share button, then Add to Home Screen.
 
 ```mermaid
 flowchart LR
-    A[Webcam] --> B[MediaPipe: shoulders and hands]
-    B --> C[LSTM model: last 2 seconds of movement]
+    A[Camera] --> B[MediaPipe: hands and shoulders]
+    B --> C[3 LSTM models: last 2 s]
     C --> D[Timing rules: hold 0.75 s]
-    D --> E[Flutter app: word, sentence, speech]
+    D --> E[Text and speech]
 ```
 
-**Status:** training (Phase 1), live translation (Phase 2) and the chat app (Phase 3) work.
+## Status
 
-- **The original 8 words:** dictionary clips plus 20 webcam recordings of each sign.
-  - **Unseen recordings:** the current model recognises 94% (75 of 80).
-  - **Live try:** all 8 signs were shown, and the signer confirmed each shown word by eye. That was on the earlier 8-word model.
-- **The 20 newer words:** chosen so that no two signs move alike. They're trained on dictionary videos only. [new_words.md](new_words.md) lists them, with how to make each sign.
-  - **Dictionary videos:** all 29 sign videos are recognised, with no wrong words, including on 23 other signs.
-  - **Live use:** not properly tested yet. In the one short session so far, 3 of the 20 appeared (fine, hungry, sleep), and whether they were right wasn't recorded.
-- **No overall accuracy score yet:** the app's accuracy test hasn't been run with a camera.
-- **Still weak:**
-  - **The free hand:** its position still matters a little. With it removed from the test samples, "hello" and "water" dropped to 60%.
-  - **Ordinary movements:** before the timing rule filters them, the model reads 2 in 5 ordinary movements as a sign. It was 1 in 5 with 8 words.
-  - **One signer:** the webcam recordings come from one person, so other signers may get lower results.
+| | |
+|---|---|
+| **Words** | 50 from the official dictionary: greetings, health, family, places, time and linking words |
+| **Your own signing** | 83% of the signer’s recordings the model never saw are read correctly (233 of 280, 14 recorded words) |
+| **Dictionary videos** | 50 of 53 sign videos give their word through the live timing rules, with no wrong words |
+| **Phone app** | Same answers as the Python model (within 0.0000002 on 20 clips); 15 of 15 dictionary videos right |
+| **Runs on** | iPhone and Android in the browser, installable to the home screen; Windows with a webcam |
+
+- **Strongest words** on the signer’s recordings (90% or more): help, no, sorry, yes, bathroom, hungry, water.
+- **Weakest:** fine (35%), medicine (60%) and hello (65%), which have look-alike signs.
+- **Recorded by hand:** 14 words, 20 recordings each, plus 40 of ordinary movements. The other 36 words are learned from dictionary videos only. [recording_checklist.md](recording_checklist.md) lists all 50 and which are recorded.
+- **One signer:** the recordings come from one person, so other signers may get lower results.
+
+## How the project is built
+
+| Part | Files | What it does |
+|---|---|---|
+| Tracking and features | `landmarks.py` | MediaPipe finds 21 points on each hand and the shoulders; hands are measured relative to the shoulders |
+| Training data | `import_dictionary.py`, `collect_data.py` | 120 varied clips from each dictionary video, plus the signer’s own webcam recordings |
+| Model | `train_model.py` | Three LSTM networks trained with different seeds; the saved model averages them |
+| Live translation | `predict_live.py` | Timing rules: a word appears after the same sign is held for 0.75 s |
+| Phone app | `phone_app/`, `export_phone_app.py` | The whole translator in the browser: MediaPipe for the web, the model in plain JavaScript |
+| Computer app | `app.py`, `flutter_app/` | A Flutter screen (web and Android) fed by a Python server on the computer with the webcam |
 
 ## Setup
 
@@ -102,7 +116,7 @@ Record each gesture in two runs of 20 (`--samples 20`) instead of one run of 40.
 | `sorry` | آسف | right |
 | `nothing` | Never shown in the chat. Record with `--dynamic`: hands resting, or moving without signing. | – |
 
-The other 20 words and their names are in [new_words.md](new_words.md).
+All 50 words, with the name to type for each, are in [recording_checklist.md](recording_checklist.md).
 
 "Right" means your main hand. Left-handed signers can use their left hand for every sign, as long as it's the same hand in every recording.
 
@@ -191,9 +205,17 @@ Then start the translator:
 - **Stopping:** press Ctrl+C in the PowerShell window.
 - **On Android:** the same app builds for Android and was tried on a Pixel 6 emulator. The phone shows the computer's camera and translation, because `app.py` still does the work. [flutter_app/README.md](flutter_app/README.md) has the build steps.
 
+## Phone app
+
+[phone_app/](phone_app/) runs the whole translator inside a phone’s browser, on the phone’s own camera, with no computer and no server. It is published with GitHub Pages at <https://ziyad4454.github.io/sign-language-translator/>, from the `gh-pages` branch, which holds the contents of `phone_app/`.
+
+- **Install:** open the link in Safari, then Share › Add to Home Screen. It opens full screen from its own icon and works offline after the first visit.
+- **Same engine:** MediaPipe’s web version tracks the hands and shoulders; `translator.js` ports the features and timing rules from `landmarks.py` and `predict_live.py`; `model.js` runs the averaged LSTM models in plain JavaScript.
+- **Update after retraining:** run `& $py export_phone_app.py`, change `VERSION` in `phone_app/sw.js`, then publish the folder to `gh-pages` again (`git subtree split --prefix phone_app -b gh-pages`, then push that branch). [phone_app/README.md](phone_app/README.md) has the details.
+
 ## Deployment
 
-The app runs on the computer that has the webcam. `app.py` reads the camera, runs the model and serves the screen, and the browser on the same computer shows it.
+The computer version runs on the computer that has the webcam. `app.py` reads the camera, runs the model and serves the screen, and the browser on the same computer shows it.
 
 1. **Prepare the computer:** follow [Setup](#setup).
 2. **Build the screen:** once, and again after changing anything in `flutter_app/`.
@@ -215,10 +237,7 @@ The app runs on the computer that has the webcam. `app.py` reads the camera, run
 
 **Android emulator:** run steps 1 and 3, then follow the build steps in [flutter_app/README.md](flutter_app/README.md). The phone screen shows the computer's camera.
 
-**What isn't supported yet:**
-
-- **A public website, including GitHub Pages:** these can only host the screen. It needs `app.py` running beside the webcam, so on its own the page stays "not connected".
-- **A real phone:** `app.py` only accepts connections from its own computer, and tracking doesn't run on the phone.
+**On a phone without the computer:** use the [phone app](#phone-app). The Flutter screen on its own can't translate: it needs `app.py` running beside the webcam, and `app.py` only accepts connections from its own computer.
 
 ## Data format
 
@@ -240,8 +259,9 @@ gesture_name, <128 numbers per frame>
 
 | Folder | What's in it |
 |---|---|
-| `data/` | 200 webcam recordings: 20 for each of the 8 original signs, and 40 of `nothing`. They're hand positions stored as numbers, with no pictures or video |
-| `model/` | `gesture_lstm.keras`, the trained model; `labels.json`, its 29 gesture names; `hand_landmarker.task` and `pose_landmarker_lite.task`, MediaPipe's tracking models |
+| `data/` | 320 webcam recordings: 20 for each of 14 signs, and 40 of `nothing`. They're hand positions stored as numbers, with no pictures or video |
+| `model/` | `gesture_lstm.keras`, the trained model (three averaged LSTMs); `labels.json`, its 51 gesture names; `hand_landmarker.task` and `pose_landmarker_lite.task`, MediaPipe's tracking models |
+| `phone_app/` | The phone app: `index.html`, `app.js`, `translator.js`, `model.js`, the exported model, and MediaPipe's web files |
 | `flutter_app/lib/` | The app's screen: camera view, sentence, history, accuracy test, speech, colors and text |
 | `flutter_app/web/` | The browser version's page and icons |
 | `flutter_app/android/` | The Android version |
@@ -270,5 +290,7 @@ These aren't in the repository:
 | `dictionary_signs.json` | Which dictionary videos belong to which gesture |
 | `labels_translation.json` | The English and Arabic text shown for each gesture |
 | `signs_guide.md` | How to perform the 8 original signs (Arabic), with links to the official dictionary videos |
-| `new_words.md` | How to perform the 20 newer signs (Arabic), and how they were chosen |
+| `new_words.md` | How to perform the 20 signs added second (Arabic), and how they were chosen |
+| `recording_checklist.md` | All 50 signs (Arabic): which are recorded, how to record the rest, and a link to each video |
+| `export_phone_app.py` | Copies the trained model and the sign guides into the phone app |
 | `requirements.txt` | Python packages |
