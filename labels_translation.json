@@ -36,5 +36,18 @@
   "from": {"en": "From", "ar": "من"},
   "on": {"en": "On", "ar": "على"},
   "about": {"en": "About", "ar": "عن"},
+  "sister": {"en": "Sister", "ar": "أخت"},
+  "son": {"en": "Son", "ar": "ابن"},
+  "friend": {"en": "Friend", "ar": "صديق"},
+  "school": {"en": "School", "ar": "مدرسة"},
+  "mosque": {"en": "Mosque", "ar": "مسجد"},
+  "prayer": {"en": "Prayer", "ar": "صلاة"},
+  "work": {"en": "Work", "ar": "عمل"},
+  "today": {"en": "Today", "ar": "اليوم"},
+  "tomorrow": {"en": "Tomorrow", "ar": "غداً"},
+  "yesterday": {"en": "Yesterday", "ar": "أمس"},
+  "big": {"en": "Big", "ar": "كبير"},
+  "small": {"en": "Small", "ar": "صغير"},
+  "beautiful": {"en": "Beautiful", "ar": "جميل"},
   "nothing": null
 }
