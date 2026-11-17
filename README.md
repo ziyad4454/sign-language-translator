@@ -16,7 +16,7 @@ flowchart LR
 
 ## Status
 
-| | |
+| What | Result |
 |---|---|
 | **Words** | 50 from the official dictionary: greetings, health, family, places, time and linking words |
 | **Your own signing** | 83% of the signer’s recordings the model never saw are read correctly (233 of 280, 14 recorded words) |
